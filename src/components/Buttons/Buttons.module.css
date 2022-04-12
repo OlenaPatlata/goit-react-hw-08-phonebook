@@ -1,0 +1,11 @@
+.btn {
+  display: inline-block;
+  text-align: center;
+  background-color: aqua;
+  width: 60px;
+  padding: 5px;
+  border-radius: 5px;
+}
+.btn:not(:last-child) {
+  margin-right: 20px;
+}
