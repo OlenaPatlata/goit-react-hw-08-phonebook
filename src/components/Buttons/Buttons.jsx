@@ -5,7 +5,7 @@ class Buttons extends Component {
   render() {
     const { onIncrementGood, onIncrementNeutral, onIncrementBad } = this.props;
     return (
-      <>
+      <div className={s.wrapper}>
         <button type="button" className={s.btn} onClick={onIncrementGood}>
           Good
         </button>
@@ -15,7 +15,7 @@ class Buttons extends Component {
         <button type="button" className={s.btn} onClick={onIncrementBad}>
           Bad
         </button>
-      </>
+      </div>
     );
   }
 }

@@ -1,3 +1,6 @@
+.wrapper {
+  display: flex;
+}
 .btn {
   display: inline-block;
   text-align: center;
@@ -8,4 +11,7 @@
 }
 .btn:not(:last-child) {
   margin-right: 20px;
+}
+.optionClasses {
+  border: 1px solid black;
 }
