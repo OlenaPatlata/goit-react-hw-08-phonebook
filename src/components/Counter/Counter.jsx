@@ -22,24 +22,17 @@ class Counter extends Component {
     bad: this.props.initialValueBad,
   };
 
-  handleIncrementGood = () => {
+  handleIncrement = event => {
     this.setState(prevState => ({
-      good: prevState.good + 1,
+      [event.target.id]: prevState[event.target.id] + 1,
     }));
   };
-  handleIncrementNeutral = () => {
-    this.setState(prevState => ({
-      neutral: prevState.neutral + 1,
-    }));
-  };
-  handleIncrementBad = () => {
-    this.setState(prevState => ({
-      bad: prevState.bad + 1,
-    }));
-  };
+
   countTotalFeedback = () => {
-    return this.state.good + this.state.neutral + this.state.bad;
+    const total = this.state.good + this.state.neutral + this.state.bad;
+    return total;
   };
+
   countPositiveFeedbackPercentage = () => {
     const percentage = (
       (this.state.good / this.countTotalFeedback()) *
@@ -49,24 +42,26 @@ class Counter extends Component {
   };
 
   render() {
+    const total = this.countTotalFeedback();
+    const positive = this.countPositiveFeedbackPercentage();
     return (
       <>
         <Section>
           <Title title="Please leave feedback" />
           <Buttons
-            onIncrementGood={this.handleIncrementGood}
-            onIncrementNeutral={this.handleIncrementNeutral}
-            onIncrementBad={this.handleIncrementBad}
+            names={Object.keys(this.state)}
+            onIncrement={this.handleIncrement}
           />
         </Section>
         <Section>
           <Title title="Statistics" />
           <Statistics
-            goodValue={this.state.good}
-            neutralValue={this.state.neutral}
-            badValue={this.state.bad}
-            onCountTotal={this.countTotalFeedback()}
-            onPositiveFeedback={this.countPositiveFeedbackPercentage()}
+            statisticArray={[
+              ...Object.entries(this.state),
+              ['total', total],
+              ['positive', positive],
+            ]}
+            total={total}
           />
         </Section>
       </>

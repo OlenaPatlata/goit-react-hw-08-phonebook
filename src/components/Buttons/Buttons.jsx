@@ -3,18 +3,21 @@ import s from './Buttons.module.css';
 
 class Buttons extends Component {
   render() {
-    const { onIncrementGood, onIncrementNeutral, onIncrementBad } = this.props;
+    const { names, onIncrement } = this.props;
+
     return (
       <div className={s.wrapper}>
-        <button type="button" className={s.btn} onClick={onIncrementGood}>
-          Good
-        </button>
-        <button type="button" className={s.btn} onClick={onIncrementNeutral}>
-          Neutral
-        </button>
-        <button type="button" className={s.btn} onClick={onIncrementBad}>
-          Bad
-        </button>
+        {names.map(name => (
+          <button
+            key={name}
+            id={name}
+            type="button"
+            className={s.btn}
+            onClick={onIncrement}
+          >
+            {name}
+          </button>
+        ))}
       </div>
     );
   }
