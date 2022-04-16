@@ -1,24 +1,58 @@
 import React, { Component } from 'react';
+// import { get, save, remove } from 'components/services/localStorage';
 import ContactsList from 'components/ContactsList/ContactsList';
 import Form from 'components/Form/Form';
 import Filter from 'components/Filter/Filter';
-import initialContacts from 'db/initialContacts';
 import shortid from 'shortid';
 import s from './App.module.css';
 
 class App extends Component {
   state = {
-    contacts: initialContacts,
+    contacts: [],
 
     filter: '',
   };
 
+  save = (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      return null;
+    }
+  };
+
+  get = key => {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (error) {
+      return null;
+    }
+  };
+
+  componentDidMount() {
+    const parsedContacts = this.get('contacts');
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state.contacts) {
+      this.save('contacts', this.state.contacts);
+    }
+  }
+
   formSubmitHandler = data => {
     const { contacts } = this.state;
-    const normalizedName = data.name.toLocaleLowerCase().split(' ').join('');
+    const normalizedName = data.name
+      .toLocaleLowerCase()
+      .split(' ')
+      .join('');
     const ableToAddName = contacts.some(
       contact =>
-        contact.name.toLocaleLowerCase().split(' ').join('') === normalizedName
+        contact.name
+          .toLocaleLowerCase()
+          .split(' ')
+          .join('') === normalizedName
     );
     const normalizedNumber = data.number.split('-').join('');
     const ableToAddNumber = contacts.some(
@@ -58,10 +92,13 @@ class App extends Component {
 
   getVisibleContacts = () => {
     const { contacts, filter } = this.state;
-    const normalizedFilter = filter.toLocaleLowerCase().trim();
-    return contacts.filter(contact =>
-      contact.name.toLocaleLowerCase().includes(normalizedFilter)
-    );
+    if (filter) {
+      const normalizedFilter = filter.toLocaleLowerCase().trim();
+      return contacts.filter(contact =>
+        contact.name.toLocaleLowerCase().includes(normalizedFilter)
+      );
+    }
+    return contacts;
   };
 
   render() {
