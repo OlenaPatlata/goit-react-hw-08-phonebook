@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-// import { get, save, remove } from 'components/services/localStorage';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import ContactsList from 'components/ContactsList/ContactsList';
 import Form from 'components/Form/Form';
 import Filter from 'components/Filter/Filter';
 import shortid from 'shortid';
 import s from './App.module.css';
-import PropTypes from 'prop-types';
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
@@ -30,7 +28,6 @@ const App = () => {
   useEffect(() => {
     const parsedContacts = get('contacts');
     if (parsedContacts) {
-      console.log(parsedContacts);
       setContacts(parsedContacts);
     }
   }, []);
@@ -44,7 +41,6 @@ const App = () => {
       .toLocaleLowerCase()
       .split(' ')
       .join('');
-    console.log(normalizedName);
     const ableToAddName = contacts.some(
       contact =>
         contact.name
@@ -72,7 +68,6 @@ const App = () => {
       number: contactNew.number,
     };
     setContacts(prev => [...prev, contactAdd]);
-    console.log(contacts);
   };
 
   const deleteContact = e => {
@@ -85,19 +80,14 @@ const App = () => {
   }
 
   const getVisibleContacts = () => {
-    console.log(filterWords);
     if (!filterWords) {
       return;
     }
     const normWord = filterWords.toLocaleLowerCase().trim();
-    console.log(contacts);
     const findContact = [...contacts].filter(contact =>
       contact.name.toLocaleLowerCase().includes(normWord)
     );
-    console.log('~ ~ getVisibleContacts ~ findContact', findContact);
-
-    // setContacts([...findContact]);
-    // return findContact;
+    return findContact;
   };
 
   const vizibleContacts = getVisibleContacts();
@@ -109,7 +99,7 @@ const App = () => {
       <h1 className={s.title}>Contacts</h1>
       <Filter value={filterWords} onChangeFilter={changeFilter} />
       <ContactsList
-        vizibleContacts={contacts}
+        vizibleContacts={vizibleContacts || contacts}
         onDeleteContact={deleteContact}
       />
     </div>
