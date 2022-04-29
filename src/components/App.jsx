@@ -1,42 +1,29 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, connect } from 'react-redux';
 import ContactsList from 'components/ContactsList/ContactsList';
 import Form from 'components/Form/Form';
 import Filter from 'components/Filter/Filter';
 import shortid from 'shortid';
+import { get, save } from 'serviсes/localStorage';
+import actions from 'redux/phonebook/phonebook-actions';
 import s from './App.module.css';
 
-const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filterWords, setFilterWords] = useState('');
+const App = ({ contacts, filterContact }) => {
+  console.log(contacts);
+  console.log(filterContact);
+  // useEffect(() => {
+  //   const parsedContacts = get('contacts');
+  //   if (parsedContacts) {
+  //     setContacts(parsedContacts);
+  //   }
+  // }, []);
 
-  const save = (key, value) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      return null;
-    }
-  };
-
-  const get = key => {
-    try {
-      return JSON.parse(localStorage.getItem(key));
-    } catch (error) {
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    const parsedContacts = get('contacts');
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }
-  }, []);
-
-  useEffect(() => {
-    save('contacts', contacts);
-  }, [contacts]);
+  // useEffect(() => {
+  //   save('contacts', contacts);
+  // }, [contacts]);
 
   const formSubmitHandler = data => {
+    console.log(contacts);
     const normalizedName = data.name
       .toLocaleLowerCase()
       .split(' ')
@@ -58,32 +45,39 @@ const App = () => {
       );
       return;
     }
-    addContact(data);
-  };
-
-  const addContact = contactNew => {
-    const contactAdd = {
+    const contactNew = {
       id: shortid.generate(),
-      name: contactNew.name,
-      number: contactNew.number,
+      name: data.name,
+      number: data.number,
     };
-    setContacts(prev => [...prev, contactAdd]);
+    // addContact(contactNew);
   };
 
-  const deleteContact = e => {
-    const smolllList = contacts.filter(contact => contact.id !== e.target.id);
-    setContacts(smolllList);
-  };
+  // const addContact = contactNew => {
+  //   setContacts(prev => [...prev, contactAdd]);
+  // };
 
-  function changeFilter(e) {
-    return (() => setFilterWords(e.currentTarget.value))();
-  }
+  // const deleteContact = e => {
+  //   const smolllList = contacts.filter(contact => contact.id !== e.target.id);
+  //   setContacts(smolllList);
+  // };
+
+  // function changeFilter(e) {
+  //   return (() => setFilterWords(e.currentTarget.value))();
+  // }
+
+  // const selectorMenu = () => {
+  //   const contactsStore = useSelector(state => state.contacts);
+  //   const filterStore = useSelector(state => state.filterContact);
+  //   return filterStore;
+  // };
 
   const getVisibleContacts = () => {
-    if (!filterWords) {
+    if (!filterContact) {
       return;
     }
-    const normWord = filterWords.toLocaleLowerCase().trim();
+    console.log(contacts);
+    const normWord = filterContact.toLocaleLowerCase().trim();
     const findContact = [...contacts].filter(contact =>
       contact.name.toLocaleLowerCase().includes(normWord)
     );
@@ -97,15 +91,24 @@ const App = () => {
       <h1 className={s.title}>Phonebook</h1>
       <Form onSubmit={formSubmitHandler} />
       <h1 className={s.title}>Contacts</h1>
-      <Filter value={filterWords} onChangeFilter={changeFilter} />
-      <ContactsList
-        vizibleContacts={vizibleContacts || contacts}
-        onDeleteContact={deleteContact}
-      />
+      <Filter />
+      <ContactsList vizibleContacts={vizibleContacts || contacts} />
     </div>
   );
 };
-export default App;
+const mapStateToProps = state => {
+  console.log('~ ~ state', state);
+  return {
+    contacts: state.phonebook.contacts,
+    filterContact: state.phonebook.filterContact,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  addContact: contactNew => dispatch(actions.myActionAddContact(contactNew)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 // ___________________________Example useState_________
 // const App = () => {

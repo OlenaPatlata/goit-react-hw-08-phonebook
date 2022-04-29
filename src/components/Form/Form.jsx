@@ -1,39 +1,41 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
+import { connect } from 'react-redux';
 import s from './Form.module.css';
 import shortid from 'shortid';
 import PropTypes from 'prop-types';
 
+const initialState = {
+  name: '',
+  number: '',
+};
+const formReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'name':
+      return { ...state, name: action.payload };
+    case 'number':
+      return { ...state, number: action.payload };
+    case 'reset':
+      return initialState;
+    default:
+      return state;
+  }
+};
+
 const Form = ({ onSubmit }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [state, dispatch] = useReducer(formReducer, initialState);
 
   const nameInputId = shortid.generate();
   const numberInputId = shortid.generate();
 
   const handleChange = event => {
-    const { name, value } = event.currentTarget;
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-
-      default:
-        break;
-    }
+    const { name, value } = event.target;
+    dispatch({ type: name, payload: value });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit({ name, number });
-    reset();
-  };
-
-  const reset = () => {
-    setName('');
-    setNumber('');
+    onSubmit(state);
+    dispatch({ type: 'reset' });
   };
 
   return (
@@ -48,7 +50,7 @@ const Form = ({ onSubmit }) => {
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
-          value={name}
+          value={state.name}
           onChange={handleChange}
           id={nameInputId}
           className={s.input}
@@ -62,7 +64,7 @@ const Form = ({ onSubmit }) => {
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={number}
+          value={state.number}
           onChange={handleChange}
           id={numberInputId}
           className={s.input}

@@ -6,9 +6,6 @@ import App from 'components/App';
 import './index.css';
 import store from 'redux/store';
 
-// const reducer = (state = {}, action) => state;
-// const store = createStore(reducer, composeWithDevTools());
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
