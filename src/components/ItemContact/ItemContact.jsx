@@ -6,6 +6,7 @@ import actions from 'redux/phonebook/phonebook-actions';
 
 const ItemContact = props => {
   const { contact, onDeleteContact } = props;
+
   return (
     <li className={s.item} id={contact.id}>
       <p className={s.text}>
@@ -34,4 +35,4 @@ ItemContact.propTypes = {
 const mapDispatchToProps = dispatch => ({
   onDeleteContact: id => dispatch(actions.myActionDeleteContact(id)),
 });
-export default connect(mapDispatchToProps)(ItemContact);
+export default connect(null, mapDispatchToProps)(ItemContact);

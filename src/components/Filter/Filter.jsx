@@ -3,6 +3,7 @@ import { useSelector, connect } from 'react-redux';
 import s from './Filter.module.css';
 import PropTypes from 'prop-types';
 import actions from 'redux/phonebook/phonebook-actions';
+import actionsTypes from 'redux/phonebook/phonebook-types';
 
 const Filter = ({ filterContact, onChangeFilter }) => (
   <div className={s.wrapper}>
@@ -22,10 +23,9 @@ Filter.propTypes = {
   onChangeFilter: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => ({
-  filterContact: state.filterContact,
+  filterContact: state.phonebook.filterContact,
 });
 const mapDispatchToProps = dispatch => ({
-  onChangeFilter: filterContact =>
-    dispatch(actions.myActionFilterContact(filterContact)),
+  onChangeFilter: e => dispatch(actions.myActionFilterContact(e)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

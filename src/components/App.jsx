@@ -8,22 +8,8 @@ import { get, save } from 'serviсes/localStorage';
 import actions from 'redux/phonebook/phonebook-actions';
 import s from './App.module.css';
 
-const App = ({ contacts, filterContact }) => {
-  console.log(contacts);
-  console.log(filterContact);
-  // useEffect(() => {
-  //   const parsedContacts = get('contacts');
-  //   if (parsedContacts) {
-  //     setContacts(parsedContacts);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   save('contacts', contacts);
-  // }, [contacts]);
-
+const App = ({ contacts, filterContact, addContact, onDeleteContact }) => {
   const formSubmitHandler = data => {
-    console.log(contacts);
     const normalizedName = data.name
       .toLocaleLowerCase()
       .split(' ')
@@ -50,33 +36,13 @@ const App = ({ contacts, filterContact }) => {
       name: data.name,
       number: data.number,
     };
-    // addContact(contactNew);
+    addContact(contactNew);
   };
-
-  // const addContact = contactNew => {
-  //   setContacts(prev => [...prev, contactAdd]);
-  // };
-
-  // const deleteContact = e => {
-  //   const smolllList = contacts.filter(contact => contact.id !== e.target.id);
-  //   setContacts(smolllList);
-  // };
-
-  // function changeFilter(e) {
-  //   return (() => setFilterWords(e.currentTarget.value))();
-  // }
-
-  // const selectorMenu = () => {
-  //   const contactsStore = useSelector(state => state.contacts);
-  //   const filterStore = useSelector(state => state.filterContact);
-  //   return filterStore;
-  // };
 
   const getVisibleContacts = () => {
     if (!filterContact) {
       return;
     }
-    console.log(contacts);
     const normWord = filterContact.toLocaleLowerCase().trim();
     const findContact = [...contacts].filter(contact =>
       contact.name.toLocaleLowerCase().includes(normWord)
@@ -97,7 +63,6 @@ const App = ({ contacts, filterContact }) => {
   );
 };
 const mapStateToProps = state => {
-  console.log('~ ~ state', state);
   return {
     contacts: state.phonebook.contacts,
     filterContact: state.phonebook.filterContact,
@@ -106,6 +71,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   addContact: contactNew => dispatch(actions.myActionAddContact(contactNew)),
+  onDeleteContact: id => dispatch(actions.myActionDeleteContact(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
