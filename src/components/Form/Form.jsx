@@ -1,8 +1,9 @@
 import React, { useReducer } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from 'redux/phonebook/phonebook-selectors';
 import s from './Form.module.css';
 import shortid from 'shortid';
-import PropTypes from 'prop-types';
+import actions from 'redux/phonebook/phonebook-actions';
 
 const initialState = {
   name: '',
@@ -21,12 +22,15 @@ const formReducer = (state = initialState, action) => {
   }
 };
 
-const Form = ({ onSubmit }) => {
+const Form = () => {
   const [state, dispatch] = useReducer(formReducer, initialState);
 
   const nameInputId = shortid.generate();
   const numberInputId = shortid.generate();
 
+  const contacts = useSelector(getContacts);
+  const dispatchAdd = useDispatch();
+  const addContact = data => dispatchAdd(actions.myActionAddContact(data));
   const handleChange = event => {
     const { name, value } = event.target;
     dispatch({ type: name, payload: value });
@@ -36,6 +40,31 @@ const Form = ({ onSubmit }) => {
     e.preventDefault();
     onSubmit(state);
     dispatch({ type: 'reset' });
+  };
+
+  const onSubmit = data => {
+    const normalizedName = data.name
+      .toLocaleLowerCase()
+      .split(' ')
+      .join('');
+    const ableToAddName = contacts.some(
+      contact =>
+        contact.name
+          .toLocaleLowerCase()
+          .split(' ')
+          .join('') === normalizedName
+    );
+    const normalizedNumber = data.number.split('-').join('');
+    const ableToAddNumber = contacts.some(
+      contact => contact.number.split('-').join('') === normalizedNumber
+    );
+    if (ableToAddName || ableToAddNumber) {
+      alert(
+        `${ableToAddName ? data.name : data.number} is already in contacts`
+      );
+      return;
+    }
+    addContact(data);
   };
 
   return (
@@ -75,10 +104,6 @@ const Form = ({ onSubmit }) => {
       </form>
     </>
   );
-};
-
-Form.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
 
 export default Form;

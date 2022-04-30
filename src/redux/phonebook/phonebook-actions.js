@@ -1,23 +1,17 @@
-import actionsTypes from 'redux/phonebook/phonebook-types';
+import { createAction } from '@reduxjs/toolkit';
+import shortid from 'shortid';
 
-// Фабрика action (возвращает литерал объекта): один type, но разные payload
-
-const myActionAddContact = contact => {
+const myActionAddContact = createAction('addContact', function prepare(
+  contact
+) {
   return {
-    type: actionsTypes.ADD,
-    payload: contact,
+    payload: { ...contact, id: shortid.generate() },
   };
-};
-
-const myActionDeleteContact = id => ({
-  type: actionsTypes.DELETE,
-  payload: id,
 });
 
-const myActionFilterContact = filterContact => ({
-  type: actionsTypes.FILTER,
-  payload: filterContact,
-});
+const myActionDeleteContact = createAction('deleteContactAction');
+
+const myActionFilterContact = createAction('filterContact');
 
 const actions = {
   myActionAddContact,

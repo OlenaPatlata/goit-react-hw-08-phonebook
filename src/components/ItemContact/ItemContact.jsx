@@ -1,12 +1,13 @@
 import React from 'react';
-import { useSelector, useDispatch, connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import s from './ItemContact.module.css';
 import PropTypes from 'prop-types';
 import actions from 'redux/phonebook/phonebook-actions';
 
-const ItemContact = props => {
-  const { contact, onDeleteContact } = props;
-
+const ItemContact = ({ contact }) => {
+  const dispatch = useDispatch();
+  const onDeleteContact = e =>
+    dispatch(actions.myActionDeleteContact(e.target.id));
   return (
     <li className={s.item} id={contact.id}>
       <p className={s.text}>
@@ -29,10 +30,6 @@ ItemContact.propTypes = {
     number: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
   }).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(actions.myActionDeleteContact(id)),
-});
-export default connect(null, mapDispatchToProps)(ItemContact);
+export default ItemContact;

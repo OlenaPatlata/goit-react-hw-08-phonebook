@@ -1,38 +1,24 @@
 import { combineReducers } from 'redux';
-import actionsTypes from 'redux/phonebook/phonebook-types';
-import { get, save } from 'serviсes/localStorage';
+import { createReducer } from '@reduxjs/toolkit';
+import actions from './phonebook-actions';
 
-const initialStateContacts = get('contacts') || [];
-const contactsReducer = (state = initialStateContacts, { type, payload }) => {
-  switch (type) {
-    case actionsTypes.ADD:
-      const contacts = [...state, payload];
-      save('contacts', contacts);
-      return [...state, payload];
+const contactsReducer = createReducer([], {
+  [actions.myActionAddContact]: (state, { payload }) => {
+    return [...state, payload];
+  },
+  [actions.myActionDeleteContact]: (state, { payload }) => {
+    const newContacts = state.filter(contact => contact.id !== payload);
+    return [...newContacts];
+  },
+});
 
-    case actionsTypes.DELETE:
-      const newContacts = state.filter(
-        contact => contact.id !== payload.target.id
-      );
-      save('contacts', newContacts);
-      return [...newContacts];
-
-    default:
-      return state;
-  }
-};
-
-const filterReducer = (state = '', { type, payload }) => {
-  switch (type) {
-    case actionsTypes.FILTER:
-      return payload.target.value;
-    default:
-      return state;
-  }
-};
+const filterReducer = createReducer('', {
+  [actions.myActionFilterContact]: (_, { payload }) => payload,
+});
 
 const phonebookReducer = combineReducers({
   contacts: contactsReducer,
   filterContact: filterReducer,
 });
+
 export default phonebookReducer;
