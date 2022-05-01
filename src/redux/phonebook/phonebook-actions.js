@@ -11,11 +11,11 @@ const myActionAddContact = createAction('addContact', function prepare(
 
 const myActionDeleteContact = createAction('deleteContactAction');
 
-const myActionFilterContact = createAction('filterContact');
+// const myActionFilterContact = createAction('filterContact');
 
 const actions = {
   myActionAddContact,
   myActionDeleteContact,
-  myActionFilterContact,
+  // myActionFilterContact,
 };
 export default actions;
