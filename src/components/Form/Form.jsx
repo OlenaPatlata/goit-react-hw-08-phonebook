@@ -1,20 +1,24 @@
 import React, { useReducer } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getContacts } from 'redux/phonebook/phonebook-selectors';
 import s from './Form.module.css';
 import shortid from 'shortid';
-import actions from 'redux/phonebook/phonebook-actions';
+import {
+  useFetchContactsQuery,
+  useAddContactMutation,
+} from 'redux/phonebook/phonebookApi';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const initialState = {
   name: '',
-  number: '',
+  phone: '',
 };
 const formReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'name':
       return { ...state, name: action.payload };
-    case 'number':
-      return { ...state, number: action.payload };
+    case 'phone':
+      return { ...state, phone: action.payload };
     case 'reset':
       return initialState;
     default:
@@ -24,13 +28,15 @@ const formReducer = (state = initialState, action) => {
 
 const Form = () => {
   const [state, dispatch] = useReducer(formReducer, initialState);
-
   const nameInputId = shortid.generate();
-  const numberInputId = shortid.generate();
+  const phoneInputId = shortid.generate();
 
-  const contacts = useSelector(getContacts);
-  const dispatchAdd = useDispatch();
-  const addContact = data => dispatchAdd(actions.myActionAddContact(data));
+  const [addContact, { isLoading, isError }] = useAddContactMutation();
+
+  const { data: contacts } = useFetchContactsQuery('', {
+    refetchOnFocus: true,
+  });
+
   const handleChange = event => {
     const { name, value } = event.target;
     dispatch({ type: name, payload: value });
@@ -42,8 +48,12 @@ const Form = () => {
     dispatch({ type: 'reset' });
   };
 
-  const onSubmit = data => {
-    const normalizedName = data.name
+  const onSubmit = state => {
+    if (contacts === [] || contacts === undefined) {
+      addContact(state);
+      return;
+    }
+    const normalizedName = state.name
       .toLocaleLowerCase()
       .split(' ')
       .join('');
@@ -54,21 +64,22 @@ const Form = () => {
           .split(' ')
           .join('') === normalizedName
     );
-    const normalizedNumber = data.number.split('-').join('');
-    const ableToAddNumber = contacts.some(
-      contact => contact.number.split('-').join('') === normalizedNumber
+    const normalizedPhone = state.phone.split('-').join('');
+    const ableToAddPhone = contacts.some(
+      contact => contact.phone.split('-').join('') === normalizedPhone
     );
-    if (ableToAddName || ableToAddNumber) {
-      alert(
-        `${ableToAddName ? data.name : data.number} is already in contacts`
+    if (ableToAddName || ableToAddPhone) {
+      toast.error(
+        `${ableToAddName ? state.name : state.phone} is already in contacts`
       );
       return;
     }
-    addContact(data);
+    addContact(state);
   };
 
   return (
     <>
+      <h1 className={s.title}>Phonebook</h1>
       <form onSubmit={handleSubmit} className={s.wrapper}>
         <label htmlFor={nameInputId} className={s.label}>
           Name
@@ -84,24 +95,25 @@ const Form = () => {
           id={nameInputId}
           className={s.input}
         />
-        <label htmlFor={numberInputId} className={s.label}>
-          Number
+        <label htmlFor={phoneInputId} className={s.label}>
+          Phone number
         </label>
         <input
           type="tel"
-          name="number"
+          name="phone"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={state.number}
+          value={state.phone}
           onChange={handleChange}
-          id={numberInputId}
+          id={phoneInputId}
           className={s.input}
         />
         <button type="submit" className={s.btn}>
           Add contact
         </button>
       </form>
+      <ToastContainer autoClose={2000} />
     </>
   );
 };

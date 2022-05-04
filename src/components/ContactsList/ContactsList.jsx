@@ -2,19 +2,32 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { getVisibleContacts } from 'redux/phonebook/phonebook-selectors';
 import s from './ContactsList.module.css';
+import { useFetchContactsQuery } from 'redux/phonebook/phonebookApi';
 import ItemContact from 'components/ItemContact/ItemContact';
+import Loader from 'components/Loader/Loader';
 
 const ContactsList = () => {
-  const contacts = useSelector(getVisibleContacts);
+  const { data, error, isError, isLoading, isFetching } = useFetchContactsQuery(
+    '',
+    {
+      refetchOnFocus: true,
+    }
+  );
+  const contacts = useSelector(state => getVisibleContacts(state, data));
 
   return (
-    <ul className={s.list}>
-      {contacts?.length
-        ? contacts.map(contact => (
-            <ItemContact key={contact.id} contact={contact} />
-          ))
-        : ''}
-    </ul>
+    <>
+      {isLoading && <Loader />}
+      {isError && error.status !== 404 && <p>Somthing wrong</p>}
+      {contacts?.length === 0 && <p>There are no contacts in the phonebook</p>}
+      <ul className={s.list}>
+        {contacts?.length
+          ? contacts.map(contact => (
+              <ItemContact key={contact.id} contact={contact} />
+            ))
+          : ''}
+      </ul>
+    </>
   );
 };
 

@@ -7,3 +7,9 @@
 
   list-style-type: disc;
 }
+p {
+  color: black;
+  font-size: 24px;
+  text-align: left;
+  font-weight: bold;
+}

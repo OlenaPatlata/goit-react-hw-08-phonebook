@@ -1,20 +1,7 @@
 import { combineReducers } from 'redux';
-import { createReducer, createSlice } from '@reduxjs/toolkit';
-import actions from './phonebook-actions';
+import { phonebookApi } from './phonebookApi';
+import { createSlice } from '@reduxjs/toolkit';
 
-const contactsReducer = createReducer([], {
-  [actions.myActionAddContact]: (state, { payload }) => {
-    return [...state, payload];
-  },
-  [actions.myActionDeleteContact]: (state, { payload }) => {
-    const newContacts = state.filter(contact => contact.id !== payload);
-    return [...newContacts];
-  },
-});
-
-// const filterReducer = createReducer('', {
-//   [actions.myActionFilterContact]: (_, { payload }) => payload,
-// });
 const initialStateFilter = '';
 
 const filterSlice = createSlice({
@@ -26,9 +13,9 @@ const filterSlice = createSlice({
   },
 });
 
-const phonebookReducer = combineReducers({
-  contacts: contactsReducer,
+const rootReducer = combineReducers({
   filterContact: filterSlice.reducer,
+  [phonebookApi.reducerPath]: phonebookApi.reducer,
 });
 export const { myActionFilterContact, reset } = filterSlice.actions;
-export default phonebookReducer;
+export default rootReducer;

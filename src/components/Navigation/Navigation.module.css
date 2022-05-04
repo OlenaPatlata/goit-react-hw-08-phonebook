@@ -1,0 +1,8 @@
+.current {
+  color: rgb(17, 17, 20);
+  margin-right: 30px;
+}
+
+.active {
+  color: rgb(172, 19, 42);
+}
