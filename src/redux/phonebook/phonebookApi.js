@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const phonebookApi = createApi({
   reducerPath: 'phonebookApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://626f9a46c508beec48862659.mockapi.io',
+    baseUrl: 'https://connections-api.herokuapp.com',
   }),
   endpoints: builder => ({
     //   запит за всіма контактами
@@ -22,7 +22,8 @@ export const phonebookApi = createApi({
         method: 'POST',
         body: {
           name: data.name,
-          phone: data.phone,
+          number: data.number,
+          email: data.email,
         },
       }),
       tagTypes: ['contacts'],

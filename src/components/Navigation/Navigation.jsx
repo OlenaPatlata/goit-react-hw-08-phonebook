@@ -1,15 +1,15 @@
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import s from './Navigation.module.css';
 
 const Navigation = () => {
   return (
     <nav>
-      <NavLink exact to="/" className={s.current} activeClassName={s.active}>
+      <Link to="/" className={s.current}>
         HOME
-      </NavLink>
-      <NavLink to="/phonebook" className={s.current} activeClassName={s.active}>
+      </Link>
+      <Link to="phonebook" className={s.current}>
         PHONEBOOK
-      </NavLink>
+      </Link>
     </nav>
   );
 };

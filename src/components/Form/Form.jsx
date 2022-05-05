@@ -8,17 +8,21 @@ import {
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
+import Button from 'components/Button/Button';
 
 const initialState = {
   name: '',
-  phone: '',
+  number: '',
+  email: '',
 };
 const formReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'name':
       return { ...state, name: action.payload };
-    case 'phone':
-      return { ...state, phone: action.payload };
+    case 'number':
+      return { ...state, number: action.payload };
+    case 'email':
+      return { ...state, email: action.payload };
     case 'reset':
       return initialState;
     default:
@@ -30,6 +34,7 @@ const Form = () => {
   const [state, dispatch] = useReducer(formReducer, initialState);
   const nameInputId = shortid.generate();
   const phoneInputId = shortid.generate();
+  const emailInputId = shortid.generate();
 
   const [addContact, { isLoading, isError }] = useAddContactMutation();
 
@@ -69,13 +74,13 @@ const Form = () => {
           .split(' ')
           .join('') === normalizedName
     );
-    const normalizedPhone = state.phone.split('-').join('');
-    const ableToAddPhone = contacts.some(
-      contact => contact.phone.split('-').join('') === normalizedPhone
+    const normalizedNumber = state.number.split('-').join('');
+    const ableToAddNumber = contacts.some(
+      contact => contact.phone.split('-').join('') === normalizedNumber
     );
-    if (ableToAddName || ableToAddPhone) {
+    if (ableToAddName || ableToAddNumber) {
       toast.error(
-        `${ableToAddName ? state.name : state.phone} is already in contacts`
+        `${ableToAddName ? state.name : state.number} is already in contacts`
       );
       return;
     }
@@ -105,18 +110,32 @@ const Form = () => {
         </label>
         <input
           type="tel"
-          name="phone"
+          name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={state.phone}
+          value={state.number}
           onChange={handleChange}
           id={phoneInputId}
           className={s.input}
         />
-        <button type="submit" className={s.btn}>
-          Add contact
-        </button>
+        <label htmlFor={emailInputId} className={s.label}>
+          Email
+        </label>
+        <input
+          type="email"
+          name="number"
+          pattern="([A-zА-я])+([0-9\-_\+\.])*([A-zА-я0-9\-_\+\.])*@([A-zА-я])+([0-9\-_\+\.])*([A-zА-я0-9\-_\+\.])*[\.]([A-zА-я])+"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+          value={state.email}
+          onChange={handleChange}
+          id={emailInputId}
+          className={s.input}
+        />
+        <div className={s.btn__wrapper}>
+          <Button title="Add contact" type="submit" />
+        </div>
       </form>
       <ToastContainer autoClose={2000} />
     </>

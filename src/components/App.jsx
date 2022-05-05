@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import HomePage from 'pages/HomePage';
 import PhonebookPage from 'pages/PhonebookPage';
@@ -7,15 +7,11 @@ import PhonebookPage from 'pages/PhonebookPage';
 const App = () => {
   return (
     <>
-      <Switch>
-        <Route path="/" exact>
-          <HomePage />
-        </Route>
-        <Route path="/phonebook">
-          <PhonebookPage />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="phonebook" element={<PhonebookPage />} />
+      </Routes>
+      {/* <Navigate to="/" replace /> */}
     </>
   );
 };
