@@ -18,15 +18,18 @@ const ContactsList = () => {
   return (
     <>
       {isLoading && <Loader />}
-      {isError && error.status !== 404 && <p>Somthing wrong</p>}
-      {contacts?.length === 0 && <p>There are no contacts in the phonebook</p>}
-      <ul className={s.list}>
-        {contacts?.length
-          ? contacts.map(contact => (
-              <ItemContact key={contact.id} contact={contact} />
-            ))
-          : ''}
-      </ul>
+      {isError && error?.status !== 404 && <p>Somthing wrong</p>}
+      {error?.status === 404 ? (
+        <p>There are no contacts in the phonebook</p>
+      ) : (
+        <ul className={s.list}>
+          {contacts?.length > 0
+            ? contacts.map(contact => (
+                <ItemContact key={contact.id} contact={contact} />
+              ))
+            : ''}
+        </ul>
+      )}
     </>
   );
 };

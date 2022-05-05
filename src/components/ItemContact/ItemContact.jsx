@@ -11,10 +11,20 @@ import { reset } from 'redux/phonebook/phonebook-reducer';
 const ItemContact = ({ contact }) => {
   const dispatch = useDispatch();
   const onResetFilter = () => dispatch(reset());
-  const [deleteContact] = useDeleteContactMutation();
+  const [
+    deleteContact,
+    {
+      isLoading: isLoadingBtn = true,
+      isError: isErrorBtn,
+      isFetching: isFetchingBtn,
+    },
+  ] = useDeleteContactMutation();
   const onDeleteContact = e => {
     deleteContact(e.target.id);
     toast(`Contact ${contact.name} deleted`, { className: 'foo' });
+    console.log(isLoadingBtn);
+    console.log(isErrorBtn);
+    console.log(isFetchingBtn);
     onResetFilter();
   };
   return (

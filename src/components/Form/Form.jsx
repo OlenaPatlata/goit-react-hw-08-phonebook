@@ -33,7 +33,12 @@ const Form = () => {
 
   const [addContact, { isLoading, isError }] = useAddContactMutation();
 
-  const { data: contacts } = useFetchContactsQuery('', {
+  const {
+    data: contacts = [],
+    error: errorform,
+    isError: isErrorForm,
+    isLoading: isloadingForm,
+  } = useFetchContactsQuery('', {
     refetchOnFocus: true,
   });
 
@@ -49,7 +54,7 @@ const Form = () => {
   };
 
   const onSubmit = state => {
-    if (contacts === [] || contacts === undefined) {
+    if (contacts === undefined) {
       addContact(state);
       return;
     }
