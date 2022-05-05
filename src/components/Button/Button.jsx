@@ -1,7 +1,20 @@
 import s from './Button.module.css';
-const Button = ({ title, onClickBack }) => {
+const Button = props => {
+  const {
+    onClick = () => {},
+    title = '',
+    type = 'button',
+    isActive = true,
+    id = '',
+  } = props;
   return (
-    <button type="button" className={s.button} onClick={onClickBack}>
+    <button
+      disabled={!isActive}
+      type={type}
+      onClick={onClick}
+      className={isActive ? s.button__activ : s.button__unactiv}
+      id={id}
+    >
       {title}
     </button>
   );

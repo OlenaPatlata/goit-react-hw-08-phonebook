@@ -13,7 +13,7 @@ const PhonebookPage = () => {
   };
   return (
     <>
-      <Button title="Go back home" onClickBack={handleClickBack} />
+      <Button title="Go back home" onClick={handleClickBack} />
       <Form />
 
       <Filter />

@@ -7,24 +7,20 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import { reset } from 'redux/phonebook/phonebook-reducer';
+import Button from 'components/Button/Button';
 
 const ItemContact = ({ contact }) => {
   const dispatch = useDispatch();
   const onResetFilter = () => dispatch(reset());
   const [
     deleteContact,
-    {
-      isLoading: isLoadingBtn = true,
-      isError: isErrorBtn,
-      isFetching: isFetchingBtn,
-    },
+    { isLoading: isLoadingBtn },
   ] = useDeleteContactMutation();
+
   const onDeleteContact = e => {
     deleteContact(e.target.id);
-    toast(`Contact ${contact.name} deleted`, { className: 'foo' });
-    console.log(isLoadingBtn);
-    console.log(isErrorBtn);
-    console.log(isFetchingBtn);
+    toast.warn(`Contact ${contact.name} deleted`);
+
     onResetFilter();
   };
   return (
@@ -32,14 +28,12 @@ const ItemContact = ({ contact }) => {
       <p className={s.text}>
         {contact.name}: {contact.phone}
       </p>
-      <button
-        id={contact.id}
-        type="button"
+      <Button
+        isActive={!isLoadingBtn}
+        title="Delete"
         onClick={onDeleteContact}
-        className={s.btn}
-      >
-        Delete
-      </button>
+        id={contact.id}
+      />
       <ToastContainer autoClose={2000} />
     </li>
   );
