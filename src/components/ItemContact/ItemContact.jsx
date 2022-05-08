@@ -2,16 +2,17 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import s from './ItemContact.module.css';
 import PropTypes from 'prop-types';
-import { useDeleteContactMutation } from 'redux/phonebook/phonebookApi';
+import { useDeleteContactMutation } from 'redux/auth/authApi';
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
-import { reset } from 'redux/phonebook/phonebook-reducer';
+import { resetFilter } from 'redux/phonebook/phonebook-reducer';
 import Button from 'components/Button/Button';
 
 const ItemContact = ({ contact }) => {
   const dispatch = useDispatch();
-  const onResetFilter = () => dispatch(reset());
+  const onResetFilter = () => dispatch(resetFilter());
   const [
     deleteContact,
     { isLoading: isLoadingBtn },

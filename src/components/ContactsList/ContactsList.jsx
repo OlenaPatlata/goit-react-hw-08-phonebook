@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { getVisibleContacts } from 'redux/phonebook/phonebook-selectors';
 import s from './ContactsList.module.css';
-import { useFetchContactsQuery } from 'redux/phonebook/phonebookApi';
+import { useFetchContactsQuery } from 'redux/auth/authApi';
+
 import ItemContact from 'components/ItemContact/ItemContact';
 import Loader from 'components/Loader/Loader';
 

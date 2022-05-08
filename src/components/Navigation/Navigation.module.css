@@ -6,3 +6,8 @@
 .active {
   color: rgb(172, 19, 42);
 }
+
+.wrapper {
+  display: flex;
+  font-size: 20px;
+}

@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux';
-import { phonebookApi } from './phonebookApi';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialStateFilter = '';
@@ -9,13 +7,9 @@ const filterSlice = createSlice({
   initialState: initialStateFilter,
   reducers: {
     myActionFilterContact: (_, { payload }) => payload,
-    reset: () => initialStateFilter,
+    resetFilter: () => initialStateFilter,
   },
 });
 
-const rootReducer = combineReducers({
-  filterContact: filterSlice.reducer,
-  [phonebookApi.reducerPath]: phonebookApi.reducer,
-});
-export const { myActionFilterContact, reset } = filterSlice.actions;
-export default rootReducer;
+export const { myActionFilterContact, resetFilter } = filterSlice.actions;
+export const filterReducer = filterSlice.reducer;
