@@ -27,7 +27,7 @@ const ItemContact = ({ contact }) => {
   return (
     <li className={s.item} id={contact.id}>
       <p className={s.text}>
-        {contact.name}: {contact.phone}
+        {contact.name}: {contact.number}
       </p>
       <Button
         isActive={!isLoadingBtn}
@@ -42,7 +42,7 @@ const ItemContact = ({ contact }) => {
 ItemContact.propTypes = {
   contact: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    phone: PropTypes.string.isRequired,
+    number: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
   }).isRequired,

@@ -37,10 +37,7 @@ const RegisterForm = () => {
   const emailInputId = shortid.generate();
   const passwordInputId = shortid.generate();
   const navigate = useNavigate();
-  const [
-    addUser,
-    { data, isLoading: isLoadingUser, isError: isErrorUser },
-  ] = useAddUserMutation();
+  const [addUser] = useAddUserMutation();
 
   const dispatchToken = useDispatch();
 
@@ -50,28 +47,21 @@ const RegisterForm = () => {
     dispatch({ type: name, payload: value });
   };
 
-  // при натискання на кнопку локальний стейт передається як аргумент до функції addUser, форма очищується
-  const handleSubmit = e => {
+  // при натискання на кнопку локальний стейт передається як аргумент до функції addUser, форма очищується, токен записується в стейт
+  const handleSubmit = async e => {
     e.preventDefault();
-    addUser(state);
-    // const { token, user } = data;
-    dispatchToken(myActionToken(data));
-
-    dispatch({ type: 'reset' });
+    try {
+      const { data } = await addUser(state);
+      console.log(data);
+      const { token, user } = data;
+      dispatchToken(myActionToken(token));
+      dispatchToken(loggedOn());
+      dispatch({ type: 'reset' });
+      navigate('/phonebook');
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  // const handleSubmit = async data => {
-  //   try {
-  //     const response = await addUser(state);
-  //     console.log(response);
-  //     dispatchToken(myActionToken(response));
-  //     dispatchToken(loggedOn());
-  //     dispatch({ type: 'reset' });
-  //     navigate('/phonebook');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   return (
     <>

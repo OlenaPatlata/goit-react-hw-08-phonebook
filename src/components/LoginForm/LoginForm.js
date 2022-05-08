@@ -36,7 +36,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const [
     loginUser,
-    { data, isLoading: isLoadingULoginUser, isError: isErrorLoginUser },
+    { isLoading: isLoadingULoginUser, isError: isErrorLoginUser },
   ] = useLoginUserMutation();
 
   const dispatchToken = useDispatch();
@@ -48,26 +48,28 @@ const LoginForm = () => {
   };
 
   // при натискання на кнопку локальний стейт передається як аргумент до функції addUser, форма очищується
-  const handleSubmit = e => {
-    e.preventDefault();
-    loginUser(state);
-    dispatchToken(myActionToken(data));
-    dispatch({ type: 'reset' });
-  };
-
-  // const handleSubmit = async data => {
-  //   try {
-  //     // e.preventDefault();
-  //     const response = await loginUser(state);
-  //     console.log(response);
-  //     //   dispatchToken(myActionToken(response));
-  //     dispatchToken(loggedOn());
-  //     dispatch({ type: 'reset' });
-  //     navigate('/phonebook');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  // const handleSubmit = e => {
+  //   e.preventDefault();
+  //   loginUser(state);
+  //   dispatchToken(myActionToken(data));
+  //   dispatch({ type: 'reset' });
   // };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      // e.preventDefault();
+      const { data } = await loginUser(state);
+      console.log(data);
+      const { token } = data;
+      dispatchToken(myActionToken(token));
+      dispatchToken(loggedOn());
+      dispatch({ type: 'reset' });
+      navigate('/phonebook');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>

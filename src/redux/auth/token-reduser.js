@@ -11,11 +11,12 @@ const tokenSlice = createSlice({
   initialState: initialStateToken,
   reducers: {
     myActionToken: (state, action) => {
-      console.log(state.isLogged);
-
-      state.token = action.payload.data.token;
+      state.token = action.payload;
     },
-    loggedOn: (state, action) => (state.isLogged = true),
+    loggedOn: (state, action) => {
+      console.log(state.isLogged);
+      state.isLogged = true;
+    },
     loggedOut: (state, action) => {
       state.isLogged = false;
       state.token = '';

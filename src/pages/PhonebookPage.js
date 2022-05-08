@@ -15,7 +15,7 @@ const PhonebookPage = () => {
   return (
     <>
       <Container>
-        <Button title="Go back home" onClick={handleClickBack} />
+        <Button title="Logout" onClick={handleClickBack} />
       </Container>
       <Container>
         <Form />
