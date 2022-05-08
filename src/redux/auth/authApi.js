@@ -5,8 +5,6 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://connections-api.herokuapp.com',
     prepareHeaders: (headers, { getState }) => {
-      console.log(getState().token?.token);
-
       const token = getState().token?.token;
       // If we have a token set in state, let's assume that we should be passing it.
       if (token) {

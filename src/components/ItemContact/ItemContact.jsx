@@ -45,7 +45,7 @@ ItemContact.propTypes = {
     number: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
 
 export default ItemContact;

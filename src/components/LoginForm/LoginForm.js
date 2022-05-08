@@ -34,10 +34,7 @@ const LoginForm = () => {
   const emailInputId = shortid.generate();
   const passwordInputId = shortid.generate();
   const navigate = useNavigate();
-  const [
-    loginUser,
-    { isLoading: isLoadingULoginUser, isError: isErrorLoginUser },
-  ] = useLoginUserMutation();
+  const [loginUser] = useLoginUserMutation();
 
   const dispatchToken = useDispatch();
 
@@ -47,20 +44,11 @@ const LoginForm = () => {
     dispatch({ type: name, payload: value });
   };
 
-  // при натискання на кнопку локальний стейт передається як аргумент до функції addUser, форма очищується
-  // const handleSubmit = e => {
-  //   e.preventDefault();
-  //   loginUser(state);
-  //   dispatchToken(myActionToken(data));
-  //   dispatch({ type: 'reset' });
-  // };
-
+  // при натискання на кнопку локальний стейт передається як аргумент до функції loginUsers, форма очищується
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      // e.preventDefault();
       const { data } = await loginUser(state);
-      console.log(data);
       const { token } = data;
       dispatchToken(myActionToken(token));
       dispatchToken(loggedOn());
@@ -68,12 +56,13 @@ const LoginForm = () => {
       navigate('/phonebook');
     } catch (error) {
       console.log(error);
+      toast.error(`Somthing wrong during logining`);
     }
   };
 
   return (
     <>
-      <h1 className={s.title}>Register</h1>
+      <h1 className={s.title}>Login</h1>
       <form onSubmit={handleSubmit} className={s.wrapper}>
         <label htmlFor={emailInputId} className={s.label}>
           Email

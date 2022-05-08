@@ -52,7 +52,6 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       const { data } = await addUser(state);
-      console.log(data);
       const { token, user } = data;
       dispatchToken(myActionToken(token));
       dispatchToken(loggedOn());
@@ -60,6 +59,7 @@ const RegisterForm = () => {
       navigate('/phonebook');
     } catch (error) {
       console.log(error);
+      toast.error(`Somthing wrong...`);
     }
   };
 

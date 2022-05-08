@@ -1,22 +1,18 @@
-import React from 'react';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, Fragment, React } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Loader from 'components/Loader/Loader';
 import AppBar from 'components/AppBar/AppBar';
-
-// import HomePage from 'pages/HomePage';
-// import PhonebookPage from 'pages/PhonebookPage';
-// import RegisterPage from 'pages/RegisterPage';
-// import NotFoundPage from 'pages/NotFoundPage';
-// import LoginPage from 'pages/LoginPage';
-// import AuthorizationPage from 'pages/AuthorizationPage';
+import PrivateRoute from 'components/PrivateRoute';
+import PublicRoute from 'components/PublicRoute';
+import { useFetchUserCurrentQuery } from 'redux/auth/authApi';
+import { getToken } from 'redux/auth/token-selectors';
 
 const LazyHomePage = lazy(() =>
   import('pages/HomePage' /* webpackChunkName: "HomePage" */)
 );
-// const LazyAuthorizationPage = lazy(() =>
-//   import('pages/AuthorizationPage' /* webpackChunkName: "AuthorizationPage" */)
-// );
+
 const LazyPhonebookPage = lazy(() =>
   import('pages/PhonebookPage' /* webpackChunkName: "PhonebookPage" */)
 );
@@ -31,19 +27,48 @@ const LazyNotFoundPage = lazy(() =>
 );
 
 const App = () => {
+  const token = useSelector(getToken);
+  const { isSuccess, isFetching } = useFetchUserCurrentQuery(null, {
+    skip: !token,
+  });
+  if (isFetching) return <Loader />;
   return (
     <>
-      <Suspense fallback={<Loader />}>
+      <Fragment>
         <AppBar />
-        <Routes>
-          <Route path="/" element={<LazyHomePage />} />
-          {/* <Route path="auth" element={<LazyAuthorizationPage />} /> */}
-          <Route path="register" element={<LazyRegisterPage />} />
-          <Route path="login" element={<LazyLoginPage />} />
-          <Route path="phonebook" element={<LazyPhonebookPage />} />
-          <Route path="*" element={<LazyNotFoundPage />} />
-        </Routes>
-      </Suspense>
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="/" element={<LazyHomePage />} />
+            <Route
+              path="register"
+              element={
+                <PublicRoute restricted>
+                  <LazyRegisterPage />
+                </PublicRoute>
+              }
+            />
+
+            <Route
+              path="login"
+              element={
+                <PublicRoute restricted>
+                  <LazyLoginPage />
+                </PublicRoute>
+              }
+            />
+
+            <Route
+              path="phonebook"
+              element={
+                <PrivateRoute>
+                  <LazyPhonebookPage />
+                </PrivateRoute>
+              }
+            />
+            <Route path="*" element={<LazyHomePage />} />
+          </Routes>
+        </Suspense>
+      </Fragment>
     </>
   );
 };
