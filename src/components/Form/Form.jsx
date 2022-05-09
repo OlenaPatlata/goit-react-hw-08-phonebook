@@ -36,14 +36,14 @@ const Form = () => {
 
   const [addContact, { isLoading, isError }] = useAddContactMutation();
 
-  const {
-    data: contacts = [],
-    error: errorform,
-    isError: isErrorForm,
-    isLoading: isloadingForm,
-  } = useFetchContactsQuery('', {
-    refetchOnFocus: true,
-  });
+  // const {
+  //   data: contacts = [],
+  //   error: errorform,
+  //   isError: isErrorForm,
+  //   isLoading: isloadingForm,
+  // } = useFetchContactsQuery('', {
+  //   refetchOnFocus: true,
+  // });
 
   const handleChange = event => {
     const { name, value } = event.target;
