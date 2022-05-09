@@ -1,10 +1,11 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import s from './Form.module.css';
 import shortid from 'shortid';
 
 import {
   useAddContactMutation,
   useLazyFetchContactsQuery,
+  useFetchContactsQuery,
 } from 'redux/auth/authApi';
 
 import { ToastContainer } from 'react-toastify';
@@ -36,15 +37,6 @@ const Form = () => {
 
   const [addContact, { isLoading, isError }] = useAddContactMutation();
 
-  // const {
-  //   data: contacts = [],
-  //   error: errorform,
-  //   isError: isErrorForm,
-  //   isLoading: isloadingForm,
-  // } = useLazyFetchContactsQuery('', {
-  //   refetchOnFocus: true,
-  // });
-
   const handleChange = event => {
     const { name, value } = event.target;
     dispatch({ type: name, payload: value });
@@ -56,12 +48,49 @@ const Form = () => {
     dispatch({ type: 'reset' });
   };
 
-  const onSubmit = state => {
-    addContact(state);
+  const {
+    fetchContacts,
+    data: contacts,
+    error: errorFetch,
+    isError: isErrorFetch,
+    isLoading: isLoadingFetch,
+    isFetching,
+  } = useFetchContactsQuery();
 
-    // toast.error(
-    //   `${ableToAddName ? state.name : state.number} is already in contacts`
-    // );
+  // useEffect(() => {
+  //   fetchContacts().unwrap();
+  // }, [fetchContacts]);
+
+  const onSubmit = async state => {
+    const normalizedName = state.name
+      .toLocaleLowerCase()
+      .split(' ')
+      .join('');
+    const ableToAddName = contacts?.some(
+      contact =>
+        contact.name
+          .toLocaleLowerCase()
+          .split(' ')
+          .join('') === normalizedName
+    );
+    const normalizedNumber = state.number.split('-').join('');
+    const ableToAddNumber = contacts?.some(
+      contact => contact.number.split('-').join('') === normalizedNumber
+    );
+    if (ableToAddName || ableToAddNumber) {
+      toast.error(
+        `${ableToAddName ? state.name : state.number} is already in contacts`
+      );
+      return;
+    }
+    try {
+      await addContact(state);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        `Something went wrong while adding a contact, try changing the name or number.`
+      );
+    }
   };
 
   return (

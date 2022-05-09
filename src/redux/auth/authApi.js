@@ -13,7 +13,7 @@ export const authApi = createApi({
       return headers;
     },
   }),
-
+  tagTypes: ['contacts', 'user'],
   endpoints: builder => ({
     //   запит за створення user
     addUser: builder.mutation({
@@ -71,7 +71,7 @@ export const authApi = createApi({
           number: data.number,
         },
       }),
-      tagTypes: ['contacts'],
+
       invalidatesTags: ['contacts'],
     }),
     //    запит на видалення контакту

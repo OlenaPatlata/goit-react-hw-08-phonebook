@@ -18,25 +18,9 @@ const ContactsList = () => {
     isLoading,
     isFetching,
   } = useFetchContactsQuery(null, { skip: !isLogged });
-  // const [
-  //   fetchContacts,
-  //   { data, error, isError, isLoading, isFetching },
-  // ] = useLazyFetchContactsQuery();
-
-  // useEffect(() => {
-  //   if (isLogged) {
-  //     fetchContacts();
-  //   }
-  // }, [isLogged]);
-
-  console.log('data', data);
-  console.log('isError', isError);
-  console.log('error', error);
-  console.log('isLoading', isLoading);
-  console.log('isFetching', isFetching);
 
   const contacts = useSelector(state => getVisibleContacts(state, data));
-  console.log(contacts);
+
   const shouContacts = contacts?.length === 0 || error?.status === 404;
 
   return (

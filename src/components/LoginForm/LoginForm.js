@@ -53,9 +53,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const data = await loginUser(state).unwrap();
-      console.log(data);
       const { token, user } = data;
-      console.log(user);
       dispatchToken(myActionToken(token));
       dispatchToken(loggedOn());
       dispatchToken(myActionUser(user));
