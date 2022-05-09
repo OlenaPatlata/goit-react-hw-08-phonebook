@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { getVisibleContacts } from 'redux/phonebook/phonebook-selectors';
 
 import s from './ContactsList.module.css';
-import { useLazyFetchContactsQuery } from 'redux/auth/authApi';
+import { useFetchContactsQuery } from 'redux/auth/authApi';
 
 import ItemContact from 'components/ItemContact/ItemContact';
 import Loader from 'components/Loader/Loader';
@@ -11,20 +11,23 @@ import { getIsLogged } from 'redux/auth/token-selectors';
 
 const ContactsList = () => {
   const isLogged = useSelector(getIsLogged);
+  const {
+    data,
+    error,
+    isError,
+    isLoading,
+    isFetching,
+  } = useFetchContactsQuery(null, { skip: !isLogged });
   // const [
   //   fetchContacts,
   //   { data, error, isError, isLoading, isFetching },
-  // ] = useLazyFetchContactsQuery(null, { skip: !isLogged });
-  const [
-    fetchContacts,
-    { data, error, isError, isLoading, isFetching },
-  ] = useLazyFetchContactsQuery();
+  // ] = useLazyFetchContactsQuery();
 
-  useEffect(() => {
-    if (isLogged) {
-      fetchContacts();
-    }
-  }, [isLogged]);
+  // useEffect(() => {
+  //   if (isLogged) {
+  //     fetchContacts();
+  //   }
+  // }, [isLogged]);
 
   console.log('data', data);
   console.log('isError', isError);
@@ -34,12 +37,13 @@ const ContactsList = () => {
 
   const contacts = useSelector(state => getVisibleContacts(state, data));
   console.log(contacts);
+  const shouContacts = contacts?.length === 0 || error?.status === 404;
 
   return (
     <>
       {isLoading && <Loader />}
       {isError && error?.status !== 404 && <p>Somthing wrong</p>}
-      {error?.status === 404 ? (
+      {shouContacts ? (
         <p>There are no contacts in the phonebook</p>
       ) : (
         <ul className={s.list}>

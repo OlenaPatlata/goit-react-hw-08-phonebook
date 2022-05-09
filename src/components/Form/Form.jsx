@@ -4,7 +4,7 @@ import shortid from 'shortid';
 
 import {
   useAddContactMutation,
-  useFetchContactsQuery,
+  useLazyFetchContactsQuery,
 } from 'redux/auth/authApi';
 
 import { ToastContainer } from 'react-toastify';
@@ -41,7 +41,7 @@ const Form = () => {
   //   error: errorform,
   //   isError: isErrorForm,
   //   isLoading: isloadingForm,
-  // } = useFetchContactsQuery('', {
+  // } = useLazyFetchContactsQuery('', {
   //   refetchOnFocus: true,
   // });
 
