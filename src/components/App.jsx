@@ -7,7 +7,7 @@ import AppBar from 'components/AppBar/AppBar';
 import PrivateRoute from 'components/PrivateRoute';
 import PublicRoute from 'components/PublicRoute';
 import { useFetchUserCurrentQuery } from 'redux/auth/authApi';
-import { getToken } from 'redux/auth/token-selectors';
+import { getToken, getIsLogged } from 'redux/auth/token-selectors';
 
 const LazyHomePage = lazy(() =>
   import('pages/HomePage' /* webpackChunkName: "HomePage" */)
@@ -28,8 +28,10 @@ const LazyNotFoundPage = lazy(() =>
 
 const App = () => {
   const token = useSelector(getToken);
+  const isLogged = useSelector(getIsLogged);
+
   const { isSuccess, isFetching } = useFetchUserCurrentQuery(null, {
-    skip: !token,
+    skip: !isLogged,
   });
   if (isFetching) return <Loader />;
   return (

@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import s from './RegisterForm.module.css';
 import shortid from 'shortid';
 import { useAddUserMutation } from 'redux/auth/authApi';
-import { myActionToken, loggedOn, loggedOut } from 'redux/auth/token-reduser';
+import {
+  myActionToken,
+  myActionUser,
+  loggedOn,
+} from 'redux/auth/token-reduser';
 import { getIsLogged, getToken } from 'redux/auth/token-selectors';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -51,12 +55,13 @@ const RegisterForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const { data } = await addUser(state);
+      const data = await addUser(state).unwrap();
       const { token, user } = data;
       dispatchToken(myActionToken(token));
       dispatchToken(loggedOn());
+      dispatchToken(myActionUser(user));
       dispatch({ type: 'reset' });
-      navigate('/phonebook');
+      // navigate('/phonebook');
     } catch (error) {
       console.log(error);
       toast.error(`Somthing wrong...`);

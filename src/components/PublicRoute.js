@@ -8,7 +8,7 @@ const PublicRoute = ({ children, restricted = false }) => {
 
   return (
     <>
-      {shouldRedirect ? <Navigate to="phonebook" replace={true} /> : children}
+      {shouldRedirect ? <Navigate to="/phonebook" replace={true} /> : children}
     </>
   );
 };

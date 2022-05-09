@@ -40,6 +40,7 @@ export const authApi = createApi({
         },
       }),
       providesTags: ['user'],
+      invalidatesTags: ['user', 'contacts'],
     }),
     //   запит разлогінити user
     logoutUser: builder.mutation({
@@ -47,7 +48,8 @@ export const authApi = createApi({
         url: '/users/logout',
         method: 'POST',
       }),
-      providesTags: ['user'],
+      providesTags: ['user', 'contacts'],
+      invalidatesTags: ['contacts'],
     }),
     //   запит на отримання інформації про поточного user
     fetchUserCurrent: builder.query({
@@ -57,6 +59,7 @@ export const authApi = createApi({
     fetchContacts: builder.query({
       query: () => ({ url: '/contacts', method: 'GET' }),
       providesTags: ['contacts'],
+      invalidatesTags: ['contacts'],
     }),
     //    запит на додавання контакту
     addContact: builder.mutation({
@@ -88,6 +91,7 @@ export const {
   useAddUserMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
+  useLazyFetchContactsQuery,
   useFetchContactsQuery,
   useAddContactMutation,
   useDeleteContactMutation,

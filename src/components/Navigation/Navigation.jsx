@@ -15,16 +15,16 @@ const Navigation = () => {
         </Link>
         {isLogged ? (
           <>
-            <Link to="phonebook" className={s.current}>
+            <Link to="/phonebook" className={s.current}>
               Phonebook
             </Link>
           </>
         ) : (
           <>
-            <Link to="register" className={s.current}>
+            <Link to="/register" className={s.current}>
               Register
             </Link>
-            <Link to="login" className={s.current}>
+            <Link to="/login" className={s.current}>
               Login
             </Link>
           </>

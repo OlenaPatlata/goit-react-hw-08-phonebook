@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import s from './LoginForm.module.css';
 import shortid from 'shortid';
 import { useLoginUserMutation } from 'redux/auth/authApi';
-import { myActionToken, loggedOn, loggedOut } from 'redux/auth/token-reduser';
+import {
+  myActionToken,
+  loggedOn,
+  myActionUser,
+} from 'redux/auth/token-reduser';
 import { getIsLogged, getToken } from 'redux/auth/token-selectors';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,10 +52,13 @@ const LoginForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const { data } = await loginUser(state);
-      const { token } = data;
+      const data = await loginUser(state).unwrap();
+      console.log(data);
+      const { token, user } = data;
+      console.log(user);
       dispatchToken(myActionToken(token));
       dispatchToken(loggedOn());
+      dispatchToken(myActionUser(user));
       dispatch({ type: 'reset' });
       navigate('/phonebook');
     } catch (error) {
