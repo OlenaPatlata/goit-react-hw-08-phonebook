@@ -4,7 +4,7 @@ import Container from 'components/Container/Container';
 const Loader = () => {
   return (
     <Container>
-      <Rings color="rgb(110, 114, 114)" height={80} width={80} />
+      <Rings color="rgb(125, 129, 129)" height={80} width={80} />
     </Container>
   );
 };
